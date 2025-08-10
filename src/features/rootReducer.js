@@ -1,17 +1,22 @@
-import { combineReducers } from '@reduxjs/toolkit';
-import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import themeReducer from './modules/themeSlice.jsx';
+import { combineReducers } from "@reduxjs/toolkit";
+import storage from "redux-persist/lib/storage";
+import { persistReducer } from "redux-persist";
+import themeSlice from "./modules/themeSlice";
+import movieSlice from "../features/modules/movieSlice" 
+import paginacaoSlice from "../features/modules/paginacaoSlice" 
 
-const persistConfig = {
-  key: 'root',
-  storage,
 
-};
-
-const rootReducer = combineReducers({
-  theme: themeReducer,
-
+export const rootReducer = combineReducers({
+    theme: themeSlice,
+    movies: movieSlice,
+    paginacao: paginacaoSlice,
 });
 
-export const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const persistedReducer = persistReducer(
+    {
+        key: "root",
+        storage: storage,
+    },
+    rootReducer
+);

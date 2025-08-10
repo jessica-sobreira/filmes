@@ -1,17 +1,16 @@
-// Um exemplo de slice
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const themeSlice = createSlice({
-  name: 'theme',
-  initialState: {
-    darkMode: false,
-  },
-  reducers: {
-    toggleTheme: (state) => {
-      state.darkMode = !state.darkMode;
-    },
-  },
+    name: "theme",
+    initialState: true,
+    reducers: {
+        toggleTheme: (state) => {
+            return !state
+        }
+        
+    }
 });
 
-export const { toggleTheme } = themeSlice.actions;
 export default themeSlice.reducer;
+
+export const { toggleTheme } = themeSlice.actions;

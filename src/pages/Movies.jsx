@@ -1,12 +1,18 @@
 
-
+import { Header } from "../components/Header";
+import { Footer } from "../components/Footer";
+import { ListMovies } from "../components/ListMovies";  
 
 
 export function Movies () {
 
     return (
-        <div>
-            <h1>Movies</h1>
-        </div>
+     <>
+     <Header />
+
+     <ListMovies />
+
+     <Footer />
+     </>
     )
 }

@@ -14,5 +14,10 @@ export const routes = createBrowserRouter([
         path: "/movies",
         element: <Movies />
     },
+
+    {
+        path: "/movies/:id",
+        element: <MovieDetail />
+    }
    
 ]);

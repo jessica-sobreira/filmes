@@ -3,11 +3,10 @@ import { createTheme } from "@mui/material";
 export const movieTheme = createTheme({
     palette: {
         primary: {
-            main: "#f00000", 
-            
+            main: "#680e34"
         },
         secondary: {
-            main: "#ffffff"
+            main: "#c21b12"
 
         }
     }
