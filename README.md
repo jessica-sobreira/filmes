@@ -54,6 +54,9 @@ O objetivo desta atividade é desenvolver uma aplicação em **ReactJS** que con
 - API: [TMDB](https://developer.themoviedb.org/) ou [OMDb](https://www.omdbapi.com/)  
 
 ---
+## Prévia do Resultado da Atividade
+
+<img width="1920" height="920" alt="layout_movies" src="https://github.com/user-attachments/assets/6e5c0c42-1480-4a9c-a6fc-05b7dc211f8a" />
 
 
 
