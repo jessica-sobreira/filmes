@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { movieThunk } from "../features/modules/movieSlice";
 import { setPage, setQuery } from "../features/modules/paginacaoSlice";
@@ -22,16 +22,15 @@ const ListMovies = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-
-            if (searchInput.trim().length < 3 && query.trim() !== '') {
-                dispatch(setQuery(''));
-            }
-
-            else if (searchInput.trim().length >= 3 && searchInput !== query) {
+            if (searchInput.trim().length >= 3 && searchInput !== query) {
                 dispatch(setQuery(searchInput));
                 dispatch(setPage(1));
+            } else if (searchInput.trim().length < 3 && query.trim() !== '') {
+
+                dispatch(setQuery(''));
+                dispatch(setPage(1));
             }
-        }, 500);
+        }, 8000);
 
         return () => {
             clearTimeout(timer);
@@ -49,6 +48,7 @@ const ListMovies = () => {
         dispatch(setQuery(searchInput));
         dispatch(setPage(1));
     };
+    
 
     let content;
 
@@ -73,7 +73,7 @@ const ListMovies = () => {
         );
     } else {
         content = (
-            <>
+            <Box>
                 <Box sx={{
                     display: 'grid',
                     gap: 2,
@@ -89,10 +89,10 @@ const ListMovies = () => {
                         <Paginacao totalResults={totalResults} page={page} />
                     </Box>
                 )}
-            </>
+            </Box>
         );
     }
-
+    
     return (
         <div style={{ minHeight: '100vh', paddingBottom: '200px' }} className="p-4 bg-gray-50">
             <Typography variant="h4" align="center" sx={{ my: 4 }}>
@@ -118,7 +118,10 @@ const ListMovies = () => {
                     </Button>
                 </Box>
             </Box>
-            {content}
+            
+            <Box sx={{ width: '100%', maxWidth: 1200, mx: 'auto', p: 2 }}>
+                {content}
+            </Box>
         </div>
     );
 };
