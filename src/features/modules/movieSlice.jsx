@@ -5,15 +5,23 @@ import { setTotalResults } from "./paginacaoSlice";
 export const movieThunk = createAsyncThunk("movies/get", async (_, config) => {
     const state = config.getState();
 
-    const query = state.paginacao.query || 'movie';
+    const query = state.paginacao.query; 
     const page = state.paginacao.page;
+
+
+    if (!query || query.trim().length < 3) {
+      config.dispatch(setTotalResults(0));
+      return []; 
+    }
 
     try {
         const basicList = await searchMovies(query, page);
         
+        
         if (!basicList || basicList.Response === "False") {
             config.dispatch(setTotalResults(0));
-            return [];
+        
+            throw new Error(basicList.Error || "Nenhum resultado encontrado.");
         }
 
         config.dispatch(setTotalResults(basicList.totalResults));
@@ -24,11 +32,12 @@ export const movieThunk = createAsyncThunk("movies/get", async (_, config) => {
 
         const movies = await Promise.all(moviePromises);
         
-        return movies.filter(movie => movie !== null && movie.Response !== "False");
+        return movies.filter(movie => movie && movie.Response !== "False");
 
     } catch (error) {
         console.error("Erro na busca de filmes:", error);
-        return [];
+        
+        return config.rejectWithValue(error.message);
     }
 });
 
@@ -49,13 +58,16 @@ const movieSlice = createSlice({
             .addCase(movieThunk.fulfilled, (state, action) => {
                 state.loading = false;
                 state.movies = action.payload;
+                state.error = null; 
             })
             .addCase(movieThunk.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message;
+
+                state.error = action.payload || "Erro desconhecido na busca."; 
+                state.movies = [];
             });
     }
 });
 
-export const { actions } = movieSlice;
+
 export default movieSlice.reducer;

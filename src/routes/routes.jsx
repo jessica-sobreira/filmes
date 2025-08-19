@@ -1,7 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Home } from "../pages/Home";
 import { Movies } from "../pages/Movies";
-
+import MovieDetail from "../pages/MovieDetail";
+import Favoritos from "../pages/Favoritos";
 
 
 export const routes = createBrowserRouter([
@@ -15,9 +16,16 @@ export const routes = createBrowserRouter([
         element: <Movies />
     },
 
+
+
     {
-        path: "/movies/:id",
+        path: "/movie/:imdbID",
         element: <MovieDetail />
-    }
-   
+    },
+
+    {
+        path: "/favoritos",
+        element: <Favoritos />
+    },
+
 ]);

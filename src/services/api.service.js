@@ -15,9 +15,12 @@ export async function searchMovies(title, page = 1) {
                 page: page,
             },
         });
+        if (response.data.Response === "False") {
+            throw new Error(response.data.Error || "Nenhum filme encontrado.");
+        }
         return response.data;
     } catch (error) {
-        console.error("Error searching movies:", error);
+        console.error("Error searching movies:", error.message);
         throw error;
     }
 }
@@ -29,9 +32,12 @@ export async function getMovieDetails(imdbID) {
                 i: imdbID,
             },
         });
+        if (response.data.Response === "False") {
+            throw new Error(response.data.Error || "Não foi possível carregar os detalhes.");
+        }
         return response.data;
     } catch (error) {
-        console.error("Error fetching movie details:", error);
+        console.error("Error fetching movie details:", error.message);
         throw error;
     }
 }

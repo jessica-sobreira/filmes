@@ -1,45 +1,96 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { movieThunk } from "../features/modules/movieSlice";
 import { setPage, setQuery } from "../features/modules/paginacaoSlice";
+import { useAppSelector } from "../features/hooks";
 import MovieCard from "./MovieCard";
-import { Paginacao } from "./Paginacao";
-import { Box, TextField, Button, Typography, CircularProgress } from '@mui/material';
+import { Paginacao } from "../components/Paginacao";
+import { Box, TextField, Button, Typography, CircularProgress, Alert } from '@mui/material';
 
-export const ListMovies = () => {
+
+
+const ListMovies = () => {
     const dispatch = useDispatch();
-    const [searchInput, setSearchInput] = useState('');
+    const movies = useAppSelector(state => state.movies.movies);
+    const loading = useAppSelector(state => state.movies.loading);
+    const error = useAppSelector(state => state.movies.error);
+    const totalResults = useAppSelector(state => state.paginacao.totalResults);
+    const page = useAppSelector(state => state.paginacao.page);
+    const query = useAppSelector(state => state.paginacao.query);
+    const [searchInput, setSearchInput] = useState(query);
 
-    const { movies, totalResults, page, query } = useSelector((state) => ({
-        movies: state.movies.movies,
-        totalResults: state.paginacao.totalResults,
-        page: state.paginacao.page,
-        query: state.paginacao.query,
-    }));
-    
-    const loading = useSelector((state) => state.movies.loading);
 
     useEffect(() => {
-        if (query) {
-            dispatch(movieThunk());
+        const timer = setTimeout(() => {
+
+            if (searchInput.trim().length < 3 && query.trim() !== '') {
+                dispatch(setQuery(''));
+            }
+
+            else if (searchInput.trim().length >= 3 && searchInput !== query) {
+                dispatch(setQuery(searchInput));
+                dispatch(setPage(1));
+            }
+        }, 500);
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [searchInput, dispatch, query]);
+
+
+    useEffect(() => {
+        if (query.trim().length >= 3) {
+            dispatch(movieThunk({ query, page }));
         }
-    }, [dispatch, page, query]);
+    }, [query, page, dispatch]);
 
     const handleSearch = () => {
         dispatch(setQuery(searchInput));
         dispatch(setPage(1));
     };
 
+    let content;
+
     if (loading) {
-        return (
+        content = (
             <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
                 <CircularProgress />
             </Box>
         );
-    }
-
-    if (!movies || movies.length === 0) {
-        return <Typography align="center" sx={{ my: 4 }}>Nenhum filme encontrado para "{query}".</Typography>;
+    } else if (error) {
+        content = (
+            <Box sx={{ textAlign: 'center', my: 4 }}>
+                <Alert severity="error">{error}</Alert>
+            </Box>
+        );
+    } else if (query.trim() === '' || movies.length === 0) {
+        content = (
+            <Box sx={{ textAlign: 'center', my: 4 }}>
+                <Typography variant="h5">Comece a buscar filmes!</Typography>
+                <Typography variant="body1">Digite o nome de um filme na caixa de busca acima para começar.</Typography>
+            </Box>
+        );
+    } else {
+        content = (
+            <>
+                <Box sx={{
+                    display: 'grid',
+                    gap: 2,
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                    justifyItems: 'center'
+                }}>
+                    {movies.map((movie) => (
+                        <MovieCard key={movie.imdbID} movie={movie} />
+                    ))}
+                </Box>
+                {totalResults > movies.length && (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+                        <Paginacao totalResults={totalResults} page={page} />
+                    </Box>
+                )}
+            </>
+        );
     }
 
     return (
@@ -52,35 +103,24 @@ export const ListMovies = () => {
                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
                     <TextField
                         label="Busque por um filme"
+                        aria-label="Campo de busca de filmes"
                         variant="outlined"
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
                         fullWidth
                     />
-                    <Button variant="contained" onClick={handleSearch} sx={{ minWidth: 120 }}>
+                    <Button
+                        variant="contained"
+                        onClick={handleSearch}
+                        aria-label="Botão para buscar filmes"
+                    >
                         Buscar
                     </Button>
                 </Box>
             </Box>
-            
-            <Box sx={{
-                display: 'grid',
-                gap: 2,
-                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                justifyItems: 'center'
-            }}>
-                {movies.map((movie) => (
-                    <MovieCard key={movie.imdbID} movie={movie} />
-                ))}
-            </Box>
-            
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-                <Paginacao
-                    totalResults={totalResults}
-                    page={page}
-                />
-            </Box>
+            {content}
         </div>
     );
 };
+
+export default ListMovies;

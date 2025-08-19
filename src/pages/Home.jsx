@@ -10,7 +10,7 @@ const StyledButton = styled(Button)`
   color: white;
   border-radius: 12px;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1rem;
   width: 200px;
   height: auto;
 
@@ -55,7 +55,9 @@ export function Home() {
         >
          
           <StyledButton
+
             variant="contained"
+            aria-label="Ir para página de filmes"
             onClick={() => navigate("/movies")}
           >
             Welcome to the Movie world

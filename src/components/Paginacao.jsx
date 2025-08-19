@@ -5,7 +5,7 @@ import { setPage } from "../features/modules/paginacaoSlice";
 export const Paginacao = () => {
     const dispatch = useAppDispatch();
     
-     const { totalResults, page, itemsPerPage } = useAppSelector(state => state.paginacao);
+    const { totalResults, page, itemsPerPage } = useAppSelector(state => state.paginacao);
 
 
     const countPages = Math.ceil(totalResults / itemsPerPage);
@@ -13,6 +13,11 @@ export const Paginacao = () => {
 
     const handlePageChange = (_, newPage) => {
         dispatch(setPage(newPage));
+    }
+
+
+    if (countPages <= 1) {
+        return null;
     }
 
     return (
