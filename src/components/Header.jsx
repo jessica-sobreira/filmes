@@ -14,17 +14,19 @@ const Title = styled(Typography)`
     flex-grow: 1;
 `;
 
-const ButtonStyled = styled(Button)`
-    height: 50px;
-    width: 50px;
-    color: black;
-    font-weight: bolder;
-    background-color: white;
 
-`;
+const ButtonStyled = styled(Button, { shouldForwardProp: (prop) => prop !== 'isDarkMode' })(({ isDarkMode }) => ({
+    height: '50px',
+    width: '50px',
+    fontWeight: 'bolder',
+    backgroundColor: isDarkMode ? 'white' : 'black',
+    color: isDarkMode ? 'black' : 'white',
+    '&:hover': {
+        backgroundColor: isDarkMode ? '#e0e0e0' : '#444',
+    }
+}));
 
 export const Header = () => {
-
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -35,21 +37,20 @@ export const Header = () => {
     };
 
     return (
-         <AppBar position="static" style={{ padding: "8px" }}>
+        <AppBar position="static" style={{ padding: "8px" }}>
             <ToolbarStyled>
                 <Title variant="h5" sx={{ fontWeight: "bold" }}>My Movies</Title>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Switch 
-                        onChange={otherTheme} 
+                    <Switch
+                        onChange={otherTheme}
                         color="default"
-                        checked={isDarkMode} 
+                        checked={isDarkMode}
                     />
-                <ButtonStyled onClick={() => navigate('/favoritos')}>  <FavoriteIcon /></ButtonStyled> 
+                    <ButtonStyled onClick={() => navigate('/favoritos')} isDarkMode={isDarkMode}>
+                        <FavoriteIcon />
+                    </ButtonStyled>
                 </div>
             </ToolbarStyled>
         </AppBar>
-    
-        
-    
     );
 };

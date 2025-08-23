@@ -7,7 +7,6 @@ export const movieTheme = createTheme({
         },
         secondary: {
             main: "#c21b12"
-
         }
     }
-}) 
+});

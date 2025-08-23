@@ -5,19 +5,17 @@ import { darkTheme } from "./features/themes/dark.mode";
 import { RouterProvider } from "react-router-dom";
 import { routes } from "./routes/routes";
 
-
 export function Root() {
-    const defaultTheme = useAppSelector((state) => state.theme)
 
-    const theme = defaultTheme ? movieTheme : darkTheme
+    const isDarkMode = useAppSelector((state) => state.theme.isDarkMode);
+
+
+    const currentTheme = isDarkMode ? darkTheme : movieTheme;
 
     return (
-        <>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={currentTheme}>
             <CssBaseline />
             <RouterProvider router={routes} />
         </ThemeProvider>
-
-        </>
-    )
+    );
 }
