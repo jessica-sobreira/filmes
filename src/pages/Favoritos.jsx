@@ -1,20 +1,19 @@
-import { Footer } from '../components/Footer';
 import { Grid, Typography, Box } from '@mui/material';
 import { useAppSelector } from '../features/hooks';
-import FavoriteCard from "../components/Favorite";
+import FavoriteCard from "../components/FavoriteCard"; 
+
 
 const Favoritos = () => {
-
     const favoritos = useAppSelector(state => state.favorites.list);
 
     return (
-        <Box sx={{ minHeight: '100vh', bgcolor: '#121212', color: '#e0e0e0', p: 4 }}>
-        
+        <>
 
-            <Typography variant="h3" component="h1" gutterBottom sx={{ textAlign: 'center', mt: 4, color: 'white' }}>
-                My Favorites
-            </Typography>
-            
+            <Box sx={{ minHeight: '100vh', bgcolor: '#121212', color: '#e0e0e0', p: 4 }}>
+                <Typography variant="h3" component="h1" gutterBottom sx={{ textAlign: 'center', mt: 4, color: 'white', fontWeight: 'bold' }}>
+                    My Favorites
+                </Typography>
+
             {favoritos.length === 0 ? (
                 <Box sx={{ textAlign: 'center', mt: 8 }}>
                     <Typography variant="h5">
@@ -30,9 +29,9 @@ const Favoritos = () => {
                     ))}
                 </Grid>
             )}
+            </Box>
 
-            <Footer />
-        </Box>
+        </>
     );
 };
 
